@@ -49,10 +49,10 @@ func TestNewStubModified(t *testing.T) {
 
 func TestRoute(t *testing.T) {
 	m := NewStubMessage(t, sample{"name"})
-	m.Endpoint = "card_created"
+	m.Endpoint = "post_created"
 
-	if m.Route() != "card_created" {
-		t.Fatalf("unexpected response, got %s, expected %s", m.Route(), "card_created")
+	if m.Route() != "post_created" {
+		t.Fatalf("unexpected response, got %s, expected %s", m.Route(), "post_created")
 	}
 }
 

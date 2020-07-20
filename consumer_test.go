@@ -45,7 +45,7 @@ func getConsumer(t *testing.T) *consumer {
 		Secret:   "secret",
 		Env:      "dev",
 		Hostname: "http://localhost:4150",
-		QueueURL: "http://goaws:4150/queue/dev-media-wrk",
+		QueueURL: "http://goaws:4150/queue/dev-post-worker",
 	}
 	sess, err := newSession(conf)
 	if err != nil {
@@ -74,11 +74,11 @@ func TestNewConsumer(t *testing.T) {
 		Hostname: "http://localhost:4150",
 		Env:      "dev",
 	}
-	c, err := NewConsumer(conf, "media-wrk")
+	c, err := NewConsumer(conf, "post-worker")
 	if err != nil {
 		t.Fatalf("error creating consumer, got %v", err)
 	}
-	expected := "http://goaws:4150/queue/dev-media-wrk"
+	expected := "http://goaws:4150/queue/dev-post-worker"
 	if c.(*consumer).QueueURL != expected {
 		t.Fatalf("did not properly apply http result, expected %s, got %s", expected, c.(*consumer).QueueURL)
 	}
@@ -87,15 +87,15 @@ func TestNewConsumer(t *testing.T) {
 func TestRegisterHandler(t *testing.T) {
 	c := getConsumer(t)
 	a := []Adapter{}
-	c.RegisterHandler("card_published", test, a...)
+	c.RegisterHandler("post_published", test, a...)
 
 	handlers := c.handlers
 	if len(handlers) != 1 {
 		t.Fatalf("did not apply the handler, expected 1 got %d", len(handlers))
 	}
 
-	if _, ok := handlers["card_published"]; !ok {
-		t.Fatalf("did not apply the correct handler, expected card_published, got %+v", handlers)
+	if _, ok := handlers["post_published"]; !ok {
+		t.Fatalf("did not apply the correct handler, expected post_published, got %+v", handlers)
 	}
 }
 
@@ -118,7 +118,7 @@ func TestMessageSelf(t *testing.T) {
 func TestMessage(t *testing.T) {
 	c := getConsumer(t)
 
-	c.Message(context.TODO(), "media-wrk", "test_event", testStruct{"val"})
+	c.Message(context.TODO(), "post-worker", "test_event", testStruct{"val"})
 	msg := retrieveMessage(t, c)
 	if msg.Route() != "test_event" {
 		t.Errorf("unexpected route, expected test_event, got %s", msg.Route())
@@ -134,7 +134,7 @@ func TestMessage(t *testing.T) {
 func TestDeleteMessage(t *testing.T) {
 	c := getConsumer(t)
 
-	c.Message(context.TODO(), "media-wrk", "test_event", testStruct{"val"})
+	c.Message(context.TODO(), "post-worker", "test_event", testStruct{"val"})
 	msg := retrieveMessage(t, c)
 	if msg.Route() != "test_event" {
 		t.Errorf("unexpected route, expected test_event, got %s", msg.Route())
@@ -148,8 +148,8 @@ func TestDeleteMessage(t *testing.T) {
 func TestRun(t *testing.T) {
 	c := getConsumer(t)
 	a := []Adapter{WithRecovery(func() {})}
-	c.RegisterHandler("card_published", test, a...)
-	c.RegisterHandler("card_event", err, a...)
+	c.RegisterHandler("post_published", test, a...)
+	c.RegisterHandler("post_event", err, a...)
 	c.RegisterHandler("extend", extend, a...)
 
 	if len(c.handlers) != 3 {
@@ -157,7 +157,7 @@ func TestRun(t *testing.T) {
 	}
 
 	t.Run("no_error", func(t *testing.T) {
-		c.Message(context.TODO(), "media-wrk", "card_published", testStruct{"val"})
+		c.Message(context.TODO(), "post-worker", "post_published", testStruct{"val"})
 		m := retrieveMessage(t, c)
 		if err := c.run(m.(*message)); err != nil {
 			t.Errorf("should not return an error, got %v", err)
@@ -165,7 +165,7 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("error", func(t *testing.T) {
-		c.Message(context.TODO(), "media-wrk", "card_event", testStruct{"val"})
+		c.Message(context.TODO(), "post-worker", "post_event", testStruct{"val"})
 		m := retrieveMessage(t, c)
 		if err := c.run(m.(*message)); err != ErrGetMessage {
 			t.Errorf("unexpected result, expected %v, got %v", ErrGetMessage, err)
@@ -173,7 +173,7 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("no_event", func(t *testing.T) {
-		c.Message(context.TODO(), "media-wrk", "no_event", testStruct{"val"})
+		c.Message(context.TODO(), "post-worker", "no_event", testStruct{"val"})
 		m := retrieveMessage(t, c)
 		if err := c.run(m.(*message)); err != nil {
 			t.Errorf("unexpected result, expected %v, got %v", nil, err)
@@ -182,7 +182,7 @@ func TestRun(t *testing.T) {
 
 	t.Run("renew_visibility", func(t *testing.T) {
 		c.VisibilityTimeout = 11
-		c.Message(context.TODO(), "media-wrk", "extend", testStruct{"val"})
+		c.Message(context.TODO(), "post-worker", "extend", testStruct{"val"})
 		m := retrieveMessage(t, c)
 		if err := c.run(m.(*message)); err != nil {
 			t.Errorf("unexpected result, expected %v, got %v", nil, err)
