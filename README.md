@@ -4,7 +4,7 @@ GoSQS serves as the messaging interface between AWS-SQS and AWS-SNS services. If
 
 Please refer to the examples to see how to interact with this library. Please make contributions, and post any issues.
 
-Take a look at the Dead Letter Queue and Naming your Queue as they are important for this design pattern
+Take a look at the Dead Letter Queue and Naming your Queue as they are important for this design pattern 
 
 ## TODO
 - create better documentation
