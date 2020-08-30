@@ -2,17 +2,13 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version
       - image: circleci/golang:1.14
-      - image: pafortin/goaws
+      - image: qhenkart/go-emulator
     working_directory: /go/src/github.com/qhenkart/gosqs
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Install dependencies
           command: |
             go mod tidy
-            ./goaws --config ./emulator/sqsconf.yaml
-            #docker run --rm -d -v /go/src/github.com/qhenkart/gosqs/emulator/sqsconf.yaml:/sqsconf.yaml -p 127.0.0.1:4100:4100 pafortin/goaws --config /sqsconf.yaml
       - run: go test -v ./...
