@@ -1,5 +1,5 @@
 # gosqs
-https://circleci.com/gh/qhenkart/gosqs.svg?style=svg
+[Circleci](https://circleci.com/gh/qhenkart/gosqs.svg?style=svg)
 
 GoSQS serves as the messaging interface between AWS-SQS and AWS-SNS services. If there is an feature you would like implemented, please make a Pull Request
 
