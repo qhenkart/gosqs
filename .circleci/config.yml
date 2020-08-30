@@ -4,7 +4,6 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.14
-      - image: pafortin/goaws
     working_directory: /go/src/github.com/qhenkart/gosqs
     steps:
       - checkout
