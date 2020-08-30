@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.14
-      - image: qhenkart/go-emulator
+      - image: qhenkart/sqs-emulator
     working_directory: /go/src/github.com/qhenkart/gosqs
     steps:
       - checkout
