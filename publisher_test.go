@@ -23,8 +23,8 @@ func TestNewPublisher(t *testing.T) {
 			Region:   "us-west-1",
 			Key:      "key",
 			Secret:   "secret",
-			Hostname: "http://localhost:4150",
-			TopicARN: "arn:aws:sns:local:000000000000:dev",
+			Hostname: "http://localhost:4100",
+			TopicARN: "arn:aws:sns:local:000000000000:todolist-dev",
 		}
 		_, err := NewPublisher(conf)
 		if err != nil {
@@ -38,17 +38,17 @@ func TestNewPublisher(t *testing.T) {
 			Key:          "key",
 			Secret:       "secret",
 			Env:          "dev",
-			Hostname:     "http://localhost:4150",
+			Hostname:     "http://localhost:4100",
 			AWSAccountID: "000000000000",
-			TopicPrefix:  "pre",
+			TopicPrefix:  "todolist",
 		}
 		pub, err := NewPublisher(conf)
 		if err != nil {
 			t.Fatalf("error creating publisher, got %v", err)
 		}
 		arn := pub.(*publisher).arn
-		if arn != "arn:aws:sns:local:000000000000:pre-dev" {
-			t.Errorf("did not properly create the arn name, expected %s, got %s", "arn:aws:sns:local:000000000000:pre-dev", arn)
+		if arn != "arn:aws:sns:local:000000000000:todolist-dev" {
+			t.Errorf("did not properly create the arn name, expected %s, got %s", "arn:aws:sns:local:000000000000:todolist-dev", arn)
 		}
 	})
 }
@@ -78,8 +78,8 @@ func getPublisher(t *testing.T) *publisher {
 		Key:      "key",
 		Env:      "dev",
 		Secret:   "secret",
-		Hostname: "http://localhost:4150",
-		TopicARN: "arn:aws:sns:local:000000000000:dev",
+		Hostname: "http://localhost:4100",
+		TopicARN: "arn:aws:sns:local:000000000000:todolist-dev",
 	}
 
 	sess, err := newSession(conf)

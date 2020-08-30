@@ -44,8 +44,8 @@ func getConsumer(t *testing.T) *consumer {
 		Key:      "key",
 		Secret:   "secret",
 		Env:      "dev",
-		Hostname: "http://localhost:4150",
-		QueueURL: "http://goaws:4150/queue/dev-post-worker",
+		Hostname: "http://localhost:4100",
+		QueueURL: "http://local.goaws:4100/queue/dev-post-worker",
 	}
 	sess, err := newSession(conf)
 	if err != nil {
@@ -71,14 +71,14 @@ func TestNewConsumer(t *testing.T) {
 		Region:   "us-west2",
 		Key:      "key",
 		Secret:   "secret",
-		Hostname: "http://localhost:4150",
+		Hostname: "http://localhost:4100",
 		Env:      "dev",
 	}
 	c, err := NewConsumer(conf, "post-worker")
 	if err != nil {
 		t.Fatalf("error creating consumer, got %v", err)
 	}
-	expected := "http://goaws:4150/queue/dev-post-worker"
+	expected := "http://local.goaws:4100/queue/dev-post-worker"
 	if c.(*consumer).QueueURL != expected {
 		t.Fatalf("did not properly apply http result, expected %s, got %s", expected, c.(*consumer).QueueURL)
 	}

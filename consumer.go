@@ -100,6 +100,14 @@ func NewConsumer(c Config, queueName string) (Consumer, error) {
 	return cons, nil
 }
 
+// Logger accesses the logging field or applies a default logger
+func (c *consumer) Logger() Logger {
+	if c.logger == nil {
+		return &defaultLogger{}
+	}
+	return c.logger
+}
+
 // RegisterHandler registers an event listener and an associated handler. If the event matches, the handler will
 // be run along with any included middleware
 func (c *consumer) RegisterHandler(name string, h Handler, adapters ...Adapter) {
@@ -142,7 +150,7 @@ func (c *consumer) Consume() {
 	for {
 		output, err := c.sqs.ReceiveMessage(&sqs.ReceiveMessageInput{QueueUrl: &c.QueueURL, MaxNumberOfMessages: &maxMessages, MessageAttributeNames: []*string{&all}})
 		if err != nil {
-			c.logger.Println("%s , retrying in 10s", ErrGetMessage.Context(err).Error())
+			c.Logger().Println("%s , retrying in 10s", ErrGetMessage.Context(err).Error())
 			time.Sleep(10 * time.Second)
 			continue
 		}
@@ -150,7 +158,7 @@ func (c *consumer) Consume() {
 		for _, m := range output.Messages {
 			if _, ok := m.MessageAttributes["route"]; !ok {
 				//a message will be sent to the DLQ automatically after 4 tries if it is received but not deleted
-				c.logger.Println(ErrNoRoute.Error())
+				c.Logger().Println(ErrNoRoute.Error())
 				continue
 			}
 
@@ -163,7 +171,7 @@ func (c *consumer) Consume() {
 func (c *consumer) worker(id int, messages <-chan *message) {
 	for m := range messages {
 		if err := c.run(m); err != nil {
-			c.logger.Println(err.Error())
+			c.Logger().Println(err.Error())
 		}
 	}
 }
@@ -251,7 +259,7 @@ func (c *consumer) sendDirectMessage(ctx context.Context, input *sqs.SendMessage
 func (c *consumer) delete(m *message) error {
 	_, err := c.sqs.DeleteMessage(&sqs.DeleteMessageInput{QueueUrl: &c.QueueURL, ReceiptHandle: m.ReceiptHandle})
 	if err != nil {
-		c.logger.Println(ErrUnableToDelete.Context(err).Error())
+		c.Logger().Println(ErrUnableToDelete.Context(err).Error())
 		return ErrUnableToDelete.Context(err)
 	}
 	return nil
@@ -263,7 +271,7 @@ func (c *consumer) extend(ctx context.Context, m *message) {
 	for {
 		//only allow 1 extensions (Default 1m30s)
 		if count >= c.extensionLimit {
-			c.logger.Println(ErrMessageProcessing.Error(), m.Route())
+			c.Logger().Println(ErrMessageProcessing.Error(), m.Route())
 			return
 		}
 
@@ -279,7 +287,7 @@ func (c *consumer) extend(ctx context.Context, m *message) {
 			extension = extension + int64(c.VisibilityTimeout)
 			_, err := c.sqs.ChangeMessageVisibility(&sqs.ChangeMessageVisibilityInput{QueueUrl: &c.QueueURL, ReceiptHandle: m.ReceiptHandle, VisibilityTimeout: &extension})
 			if err != nil {
-				c.logger.Println(ErrUnableToExtend.Error(), err.Error())
+				c.Logger().Println(ErrUnableToExtend.Error(), err.Error())
 				return
 			}
 		}
