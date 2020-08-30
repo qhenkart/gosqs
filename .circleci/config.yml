@@ -4,9 +4,13 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.14
+      - image: pafortin/goaws
     working_directory: /go/src/github.com/qhenkart/gosqs
     steps:
       - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Install dependencies
           command: |
