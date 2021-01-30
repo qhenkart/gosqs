@@ -1,6 +1,16 @@
 # gosqs
 ![Circleci](https://circleci.com/gh/qhenkart/gosqs.svg?style=svg&circle-token=c1a91e2472b2e5a2eb6957c8b2ad0f321513a24a)
 
+What if sending events to SQS or SNS was as easy as this
+![So easy to send messages!](https://user-images.githubusercontent.com/5798752/106343851-b225b780-6264-11eb-82be-4038969e50c3.png)
+
+What if receiving SQS messages was as easy as this
+![So easy to send messages!](https://user-images.githubusercontent.com/5798752/106343862-bfdb3d00-6264-11eb-91fd-7fa0378b6353.png)
+
+Yes it is possible! Check out my blog post that led me to develop this library https://questhenkart.medium.com/sqs-consumer-design-achieving-high-scalability-while-managing-concurrency-in-go-d5a8504ea754
+
+I am available for contracts to increase your async messaging system by up to 4000% (terms and conditions apply)! Better yet, do it yourself for free with this open source project.
+
 GoSQS serves as the messaging interface between AWS-SQS and AWS-SNS services. If there is an feature you would like implemented, please make a Pull Request
 
 Please refer to the examples to see how to interact with this library. Please make contributions, and post any issues.
