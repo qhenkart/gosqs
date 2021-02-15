@@ -7,9 +7,9 @@
 ## What if receiving SQS messages was as easy as this
 ![So easy to send messages!](https://user-images.githubusercontent.com/5798752/106343862-bfdb3d00-6264-11eb-91fd-7fa0378b6353.png)
 
-#### Yes it is possible! Check out my blog post that led me to develop this library https://questhenkart.medium.com/sqs-consumer-design-achieving-high-scalability-while-managing-concurrency-in-go-d5a8504ea754
+## Yes it is possible! Check out my blog post that led me to develop this library https://questhenkart.medium.com/sqs-consumer-design-achieving-high-scalability-while-managing-concurrency-in-go-d5a8504ea754
 
-#### Do you have a simple messaging system and need to scale to hundreds, thousands, millions? I am available for contracts to scale your async messaging system and provide a customized solution for you and your team/company/project! Email me at qhenkart@gmail.com. Let's make magic together!
+### Do you have a simple messaging system and need to scale to hundreds, thousands, millions? I am available for contracts to scale your async messaging system and provide a customized solution for you and your team/company/project! Email me at qhenkart@gmail.com. Let's make magic together!
 
 Better yet, do it yourself for free with this open source project.
 
