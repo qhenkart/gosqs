@@ -11,7 +11,7 @@
 
 ### Do you have a simple messaging system and need to scale to hundreds, thousands, millions? I am available for contracts to scale your async messaging system and provide a customized solution for you and your team/company/project! Email me at qhenkart@gmail.com. Let's make magic together!
 
-_Better yet, do it yourself for free with this open source project.
+_Better yet, do it yourself for free with this open source project._
 
 GoSQS serves as the messaging interface between AWS-SQS and AWS-SNS services. If there is an feature you would like implemented, please make a Pull Request
 
