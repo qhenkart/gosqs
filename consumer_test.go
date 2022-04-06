@@ -188,5 +188,19 @@ func TestRun(t *testing.T) {
 			t.Errorf("unexpected result, expected %v, got %v", nil, err)
 		}
 	})
-
 }
+
+// // TODO:fix `panic: runtime error: invalid memory address or nil pointer dereference`
+// func TestRunNoAttributes(t *testing.T) {
+// 	c := getConsumer(t)
+// 	a := []Adapter{WithRecovery(func() {})}
+// 	c.RegisterHandler("", test, a...)
+
+// 	t.Run("no_attributes", func(t *testing.T) {
+// 		c.Message(context.TODO(), "post-worker", "", testStruct{"val"})
+// 		m := retrieveMessage(t, c)
+// 		if err := c.run(m.(*message)); err != nil {
+// 			t.Errorf("should not return an error, got %v", err)
+// 		}
+// 	})
+// }

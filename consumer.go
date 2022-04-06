@@ -156,10 +156,15 @@ func (c *consumer) Consume() {
 		}
 
 		for _, m := range output.Messages {
+			// If the Message doesn't have a "route" attribute, the default route is "".
+			// (This allows us to run a queue without routing.)
+			if m.MessageAttributes == nil {
+				m.MessageAttributes = defaultSQSAttributes("")
+			}
 			if _, ok := m.MessageAttributes["route"]; !ok {
-				//a message will be sent to the DLQ automatically after 4 tries if it is received but not deleted
-				c.Logger().Println(ErrNoRoute.Error())
-				continue
+				t := "String"
+				v := ""
+				m.MessageAttributes["route"] = &sqs.MessageAttributeValue{DataType: &t, StringValue: &v}
 			}
 
 			jobs <- newMessage(m)
