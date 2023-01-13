@@ -57,7 +57,12 @@ type consumer struct {
 // NewConsumer creates a new SQS instance and provides a configured consumer interface for
 // receiving and sending messages
 func NewConsumer(c Config, queueName string) (Consumer, error) {
-	sess, err := newSession(c)
+	if c.SessionProvider == nil {
+		c.SessionProvider = newSession
+	}
+
+	sess, err := c.SessionProvider(c)
+
 	if err != nil {
 		return nil, err
 	}
