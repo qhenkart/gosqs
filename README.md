@@ -1,5 +1,5 @@
 # gosqs
-![Circleci](https://circleci.com/gh/qhenkart/gosqs.svg?style=svg&circle-token=c1a91e2472b2e5a2eb6957c8b2ad0f321513a24a)
+![Circleci](https://circleci.com/gh/qhenkart/gosqs.svg?style=svg&circle-token=c1a91e2472b2e5a2eb6957c8b2ad0f321513a24a) [![Go Reference](https://pkg.go.dev/badge/github.com/qhenkart/gosqs/.svg)](https://pkg.go.dev/github.com/qhenkart/gosqs/)
 
 ## What if sending events to SQS or SNS was as easy as this
 ![So easy to send messages!](https://user-images.githubusercontent.com/5798752/106343851-b225b780-6264-11eb-82be-4038969e50c3.png)
