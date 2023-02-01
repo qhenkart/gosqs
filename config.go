@@ -10,6 +10,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 )
 
+// SessionProviderFunc can be used to add custom AWS session setup to the gosqs.Config.
+// Callers simply need to implement this function type and set it as Config.SessionProvider.
+// If Config.SessionProvider is not set (is nil), a default provider based on AWS Key/Secret will be used.
 type SessionProviderFunc func(c Config) (*session.Session, error)
 
 // Config defines the gosqs configuration
