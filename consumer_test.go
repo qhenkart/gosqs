@@ -5,6 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 )
 
@@ -74,6 +78,39 @@ func TestNewConsumer(t *testing.T) {
 		Hostname: "http://localhost:4100",
 		Env:      "dev",
 	}
+	c, err := NewConsumer(conf, "post-worker")
+	if err != nil {
+		t.Fatalf("error creating consumer, got %v", err)
+	}
+	expected := "http://local.goaws:4100/queue/dev-post-worker"
+	if c.(*consumer).QueueURL != expected {
+		t.Fatalf("did not properly apply http result, expected %s, got %s", expected, c.(*consumer).QueueURL)
+	}
+}
+
+func TestNewConsumerWithSessionProvider(t *testing.T) {
+	provider := func(c Config) (*session.Session, error) {
+		creds := credentials.NewStaticCredentials("mykey", "mysecret", "")
+		_, err := creds.Get()
+		if err != nil {
+			return nil, ErrInvalidCreds.Context(err)
+		}
+
+		r := &retryer{retryCount: c.RetryCount}
+
+		cfg := request.WithRetryer(aws.NewConfig().WithRegion("us-west2").WithCredentials(creds), r)
+
+		hostname := "http://localhost:4100"
+		cfg.Endpoint = &hostname
+
+		return session.NewSession(cfg)
+	}
+
+	conf := Config{
+		SessionProvider: provider,
+		Env:             "dev",
+	}
+
 	c, err := NewConsumer(conf, "post-worker")
 	if err != nil {
 		t.Fatalf("error creating consumer, got %v", err)

@@ -55,7 +55,12 @@ type publisher struct {
 
 // NewPublisher creates a new SQS/SNS publisher instance
 func NewPublisher(c Config) (Publisher, error) {
-	sess, err := newSession(c)
+	if c.SessionProvider == nil {
+		c.SessionProvider = newSession
+	}
+
+	sess, err := c.SessionProvider(c)
+
 	if err != nil {
 		return nil, err
 	}

@@ -10,8 +10,15 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 )
 
+// SessionProviderFunc can be used to add custom AWS session setup to the gosqs.Config.
+// Callers simply need to implement this function type and set it as Config.SessionProvider.
+// If Config.SessionProvider is not set (is nil), a default provider based on AWS Key/Secret will be used.
+type SessionProviderFunc func(c Config) (*session.Session, error)
+
 // Config defines the gosqs configuration
 type Config struct {
+	// a way to provide custom session setup. A default based on key/secret will be used if not provided
+	SessionProvider SessionProviderFunc
 	// private key to access aws
 	Key string
 	// secret to access aws
@@ -108,7 +115,8 @@ func (r retryer) MaxRetries() int {
 	return 10
 }
 
-// newSession creates a new aws session
+// newSession creates a new aws session.
+// This will be used as the default SessionProvider if one is not set
 func newSession(c Config) (*session.Session, error) {
 	//sets credentials
 	creds := credentials.NewStaticCredentials(c.Key, c.Secret, "")
