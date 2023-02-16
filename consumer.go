@@ -75,8 +75,8 @@ func NewConsumer(c Config, queueName string) (Consumer, error) {
 		extensionLimit:    2,
 	}
 
-	if c.Logger == nil {
-		cons.logger = &defaultLogger{}
+	if c.Logger != nil {
+		cons.logger = c.Logger
 	}
 
 	if c.VisibilityTimeout != 0 {
