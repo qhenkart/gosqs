@@ -1,0 +1,24 @@
+Local:                              # Environment name that can be passed on the command line
+                                    #     (i.e.: ./goaws [Local | Dev]  -- defaults to 'Local')
+  Host: goaws                   # hostname of the goaws system  (for docker-compose this is the tag name of the container)
+# you can now use either 1 port for both sns and sqs or alternatively you can comment out Port and use SqsPort + SnsPort for compatibilyt with
+# yopa and (fage-sns + face-sqs).  If both ways are in the config file on the one "Port" will be used by GoAws
+  Port: 4100                        # port to listen on.
+  Region: local
+  LogMessages: true                 # Log messages (true/false)
+  LogFile: ./goaws_messages.log  # Log filename (for message logging
+  Queues:                           # List of queues to create at startup
+    - Name: dev-post-worker                 # Queue name
+      ReceiveMessageWaitTimeSeconds: 20   # Queue receive message max wait time
+      VisibilityTimeout: 30               # Total processing time for a message
+    - Name: dev-user-worker                 # Queue name
+      ReceiveMessageWaitTimeSeconds: 20   # Queue receive message max wait time
+      VisibilityTimeout: 30               # Total processing time for a message
+
+  Topics:                           # List of topic to create at startup
+    - Name: todolist-dev              # Topic name - with some Subscriptions
+      Subscriptions:                # List of Subscriptions to create for this topic (queues will be created as required)
+        - QueueName: dev-post-worker                 # Queue name
+          Raw: true                                # Raw message delivery (true/false)
+        - QueueName: dev-user-worker                  # Queue name
+          Raw: true                                # Raw message delivery (true/false)

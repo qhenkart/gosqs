@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.14
+      - image: qhenkart/sqs-emulator
+    working_directory: /go/src/github.com/qhenkart/gosqs
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            go mod tidy
+      - run: go test -v ./...
