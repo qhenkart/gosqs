@@ -83,3 +83,4 @@ You can add custom middleware to your consumer. These will run using the adapter
 ## Testing
 You can set up a local SNS/SQS emulator using https://github.com/p4tin/goaws. Contributions have been added to this emulator specifically to support this library
 Tests also require this to be running, I will eventually set up a ci environment that runs the emulator in a container and runs the tests
+
